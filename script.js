@@ -1,5 +1,3 @@
-
-
 /* ═══════════════════════════════════════════════════════════════
    PARTICLES ANIMATION
 ═══════════════════════════════════════════════════════════════ */
@@ -25,6 +23,354 @@ function scrollToHome() {
   homeSection.classList.add('visible');
   homeSection.scrollIntoView({ behavior: 'smooth' });
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   IMPROVED VOICE SEARCH — Subject Matching Logic
+═══════════════════════════════════════════════════════════════ */
+
+// ── 1. BRANCH ALIAS MAP ──────────────────────────────────────
+const BRANCH_ALIASES = {
+  "computer science":          "CSE",
+  "comp sci":                  "CSE",
+  "cse":                       "CSE",
+  "cs e":                      "CSE",
+  "c s e":                     "CSE",
+  "information technology":    "IT",
+  "info tech":                 "IT",
+  "it":                        "IT",
+  "i t":                       "IT",
+  "electronics communication": "ECE",
+  "electronics":               "ECE",
+  "ece":                       "ECE",
+  "mechanical engineering":    "Mechanical",
+  "mechanical":                "Mechanical",
+  "civil engineering":         "Civil",
+  "civil":                     "Civil",
+  "electrical engineering":    "Electrical",
+  "electrical":                "Electrical",
+  "data science":              "CSE-DS",
+  "cse ds":                    "CSE-DS",
+  "cseds":                     "CSE-DS",
+  "cyber security":            "CSE-CS",
+  "cse cs":                    "CSE-CS",
+  "c s":                       "CSE-CS",
+  "cse aiml":                  "CSE-AIML",
+  "aiml":                      "CSE-AIML",
+  "ai ml":                     "CSE-AIML",
+  "artificial intelligence and machine learning": "CSE-AIML"
+};
+
+// Maps spoken number words → digits
+const NUMBER_WORDS = {
+  "one":"1","two":"2","three":"3","four":"4",
+  "five":"5","six":"6","seven":"7","eight":"8",
+};
+
+
+/* ── 2. NORMALIZE HELPER ────────────────────────────────────────
+   Strips spaces, lowercases, removes punctuation.
+*/
+function normalizeText(text) {
+  return text
+    .toLowerCase()
+    .replace(/\./g, "")
+    .replace(/\s+/g, "")
+    .trim();
+}
+
+/* ── 3. DYNAMIC SUBJECT MATCHER ─────────────────────────────────
+   Reads subject options directly from the dropdown at runtime.
+*/
+function matchSubjectFromDropdown(normalizedVoice) {
+  const subjectSelect = document.getElementById("subject");
+  if (!subjectSelect) return null;
+
+  for (const option of subjectSelect.options) {
+    const optionText = option.text.trim();
+    if (!optionText || option.value === "") continue;
+
+    const normalizedOption = normalizeText(optionText);
+
+    if (
+      normalizedVoice.includes(normalizedOption) ||
+      normalizedOption.includes(normalizedVoice)
+    ) {
+      return optionText;
+    }
+  }
+
+  return null;
+}
+
+
+/* ── 4. PARSE VOICE INPUT ───────────────────────────────────────
+   Extracts branch, semester, and subject from raw spoken text.
+*/
+function parseVoiceInput(text) {
+  let raw = text.toLowerCase().trim();
+
+  Object.entries(NUMBER_WORDS).forEach(([word, digit]) => {
+    raw = raw.replace(new RegExp(`\\b${word}\\b`, "g"), digit);
+  });
+
+  let branch   = null;
+  let semester = null;
+  let subject  = null;
+
+  // ── Detect SEMESTER ─────────────────────────────────────────
+  const semMatch =
+    raw.match(/\b(?:semester|sem)\s*([1-8])\b/) ||
+    raw.match(/\b([1-8])(?:st|nd|rd|th)?\s*(?:semester|sem)\b/);
+  if (semMatch) semester = semMatch[1];
+
+  // ── Detect BRANCH via alias map ─────────────────────────────
+  // Longest alias matched first
+  const sortedBranchAliases = Object.entries(BRANCH_ALIASES)
+    .sort((a, b) => b[0].length - a[0].length);
+
+  for (const [alias, value] of sortedBranchAliases) {
+    if (raw.includes(alias)) {
+      branch = value;
+      break;
+    }
+  }
+
+  // ── Detect SUBJECT — dynamic ─────────────────────────────────
+  const normalizedVoice = normalizeText(raw);
+  subject = matchSubjectFromDropdown(normalizedVoice);
+
+  return { branch, semester, subject };
+}
+
+
+/* ── 5. AUTO-SELECT DROPDOWNS ───────────────────────────────────
+   BUG FIX: Changed branch matching from opt.text.includes(value)
+   to an EXACT match (case-insensitive) so "CSE" never accidentally
+   selects "CSE-DS", "CSE-AIML", etc.
+*/
+function applyToDropdowns({ branch, semester, subject }) {
+
+  function setSelect(id, value, exactMatch = false) {
+    if (!value) return false;
+    const sel = document.getElementById(id);
+    if (!sel) return false;
+
+    for (const opt of sel.options) {
+      const optText = opt.text.trim();
+
+      // BUG FIX: use exact match for branch to prevent "CSE" hitting "CSE-DS"
+      const matched = exactMatch
+        ? optText.toLowerCase() === value.toLowerCase()
+        : optText.toLowerCase().includes(value.toLowerCase());
+
+      if (matched) {
+        sel.value = opt.value;
+        sel.dispatchEvent(new Event("change"));
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Branch uses exactMatch = true  ← KEY FIX
+  const branchSet   = branch   ? setSelect("branch",   branch,                 true)  : false;
+  const semesterSet = semester  ? setSelect("semester", "Semester " + semester, false) : false;
+  const subjectSet  = subject   ? setSelect("subject",  subject,               true)  : false;
+
+  return { branchSet, semesterSet, subjectSet };
+}
+
+
+/* ── 6. STATUS DISPLAY ──────────────────────────────────────────*/
+function setVoiceStatus(msg, type = "info") {
+  const el = document.getElementById("voiceStatus");
+  if (!el) return;
+  el.textContent = msg;
+  el.className   = "voice-status " + type;
+}
+
+
+/* ── 7. CLEAR VOICE UI ──────────────────────────────────────────*/
+function clearVoice() {
+  document.getElementById("liveText").textContent        = "";
+  document.getElementById("placeholderText").style.display = "";
+  document.getElementById("clearBtn").style.display      = "none";
+  document.getElementById("voiceStatus").textContent     = "";
+  document.getElementById("voiceBar").classList.remove("listening");
+  document.getElementById("micBtn").classList.remove("listening");
+}
+
+
+/* ── 8. PROCESS TRANSCRIPT ──────────────────────────────────────
+   BUG FIX 2 & 3:
+   - findPapers() is now only called when branch AND semester are
+     detected (minimum required), AND subject is also found.
+   - If subject is missing after dropdown populates, we show a
+     warning and do NOT call findPapers().
+*/
+function processTranscript(transcript) {
+  const parsed = parseVoiceInput(transcript);
+
+  // Apply branch + semester first
+  const { branchSet, semesterSet } = applyToDropdowns({
+    branch:   parsed.branch,
+    semester: parsed.semester,
+    subject:  null
+  });
+
+  const anyMatch = branchSet || semesterSet;
+
+  if (!anyMatch) {
+    setVoiceStatus(
+      "⚠ Couldn't detect branch or semester. Please try again.",
+      "error"
+    );
+    return;
+  }
+
+  // Wait 700ms for branch/semester dropdowns to cascade and populate subject dropdown
+  setTimeout(() => {
+
+    // NOW try to match subject after dropdown is populated
+    const normalizedVoice = normalizeText(transcript);
+    parsed.subject = matchSubjectFromDropdown(normalizedVoice);
+
+    // Build status message parts
+    const parts = [];
+    if (parsed.branch)   parts.push("Branch: "   + parsed.branch);
+    if (parsed.semester) parts.push("Semester: " + parsed.semester);
+    if (parsed.subject)  parts.push("Subject: "  + parsed.subject);
+
+    // BUG FIX 3: Only call findPapers if branch + semester + subject are ALL detected.
+    // If any are missing, show a helpful message and stop — do not show papers.
+    if (!parsed.branch || !parsed.semester) {
+      setVoiceStatus(
+        "⚠ Please say both your branch and semester clearly.",
+        "error"
+      );
+      return;
+    }
+
+    if (!parsed.subject) {
+      // Apply branch/semester to dropdowns so the user can manually pick subject
+      setVoiceStatus(
+        "✔ Detected — " + parts.join(" · ") +
+        " · ⚠ Subject not recognised — please select it from the dropdown, then click Find PYQs.",
+        "info"
+      );
+      // Do NOT call findPapers — subject is required before showing results
+      return;
+    }
+
+    // All three detected — apply subject and search
+    applyToDropdowns({ branch: null, semester: null, subject: parsed.subject });
+
+    setVoiceStatus("✔ Detected — " + parts.join(" · "), "success");
+
+    setTimeout(() => {
+      if (typeof findPapers === "function") findPapers();
+    }, 400);
+
+  }, 700);
+}
+
+/* ── 9. SIMULATE VOICE (for demo chips) ─────────────────────────*/
+function simulateVoice(text) {
+  document.getElementById("liveText").textContent          = text;
+  document.getElementById("placeholderText").style.display = "none";
+  document.getElementById("clearBtn").style.display        = "";
+  processTranscript(text);
+}
+
+
+/* ── 10. MAIN VOICE RECOGNITION FUNCTION ───────────────────────*/
+let recognition = null;
+
+function startVoiceSearch() {
+
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    setVoiceStatus(
+      "⚠ Voice search isn't supported in this browser. Please use Chrome or Edge.",
+      "error"
+    );
+    return;
+  }
+
+  if (recognition) {
+    recognition.stop();
+    recognition = null;
+    return;
+  }
+
+  recognition = new SpeechRecognition();
+  recognition.lang            = "en-IN";
+  recognition.continuous      = false;
+  recognition.interimResults  = true;
+  recognition.maxAlternatives = 3;
+
+  const micBtn   = document.getElementById("micBtn");
+  const voiceBar = document.getElementById("voiceBar");
+  const liveText = document.getElementById("liveText");
+  const phText   = document.getElementById("placeholderText");
+  const clearBtn = document.getElementById("clearBtn");
+
+  recognition.onstart = () => {
+    micBtn.classList.add("listening");
+    voiceBar.classList.add("listening");
+    liveText.textContent   = "";
+    phText.style.display   = "";
+    clearBtn.style.display = "none";
+    setVoiceStatus("🎙 Listening… speak now", "info");
+  };
+
+  recognition.onresult = (event) => {
+    let interim  = "";
+    let finalStr = "";
+
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const t = event.results[i][0].transcript;
+      event.results[i].isFinal ? (finalStr += t) : (interim += t);
+    }
+
+    liveText.textContent   = finalStr || interim;
+    phText.style.display   = "none";
+    clearBtn.style.display = "";
+
+    if (finalStr) processTranscript(finalStr);
+  };
+
+  recognition.onend = () => {
+    micBtn.classList.remove("listening");
+    voiceBar.classList.remove("listening");
+    recognition = null;
+    if (!liveText.textContent) {
+      setVoiceStatus("No speech detected. Please try again.", "error");
+    }
+  };
+
+  recognition.onerror = (e) => {
+    micBtn.classList.remove("listening");
+    voiceBar.classList.remove("listening");
+    recognition = null;
+    const errorMessages = {
+      "not-allowed": "Microphone access denied. Please allow mic permission in your browser.",
+      "network":     "Network error. Check your internet connection.",
+      "no-speech":   "No speech detected. Please try again.",
+      "aborted":     "Listening stopped.",
+    };
+    setVoiceStatus(
+      "⚠ " + (errorMessages[e.error] || "Something went wrong: " + e.error),
+      "error"
+    );
+  };
+
+  recognition.start();
+}
+
+
 
 /* ═══════════════════════════════════════════════════════════════
    COURSE DATA
@@ -852,7 +1198,7 @@ const papers = [
     semester: "Semester 4", 
     branch: "CSE-CS", 
     school: "School of Computer Science Engineering",
-    fileId: "1gYVAff6cvrxaohSFhzTl0pbt0IH6THW0"
+    fileId: "1gYVAff6cvrxaohSFhzTl0pBiotech0IH6THW0"
 
   },{
     subject: "Object Oriented Programming", 
@@ -1492,7 +1838,7 @@ const papers = [
     semester: "Semester 8", 
     branch: "CSE", 
     school: "School of Computer Science Engineering",
-    fileId: "1TQ1OgBt0Pn86QOSI_2Mwz5vaa-9j01JL"
+    fileId: "1TQ1OgBiotech0Pn86QOSI_2Mwz5vaa-9j01JL"
 
   },{
     subject: "Web & Internet Technology", 
@@ -1503,6 +1849,395 @@ const papers = [
     fileId: "1i4q5SGcJS112EGYYR5YotvPZzS6E4Epl"
 
   },
+
+  // ========CORE BRANCHES========
+
+  {
+    subject: "Analog Communication", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "ECE", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1IYykgyHLZU_zlsdy8QN8Yy3vQeqweWPZ"
+
+  }, {
+    subject: "Analog Communication", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "ECE", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "11d6uXBGYmh9WYXRWFzSTuEfYnLCucC8b"
+
+  },{
+    subject: "Control System & Instrumentation", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "ECE", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1NDrO76esdckdEExR4613U9vYLxqdFitB"
+
+  },{
+    subject: "Electromagnetics Theory & Transmission Lines", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "ECE", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1ahqPPPT-UbErbEXg3rdZP1kiTNyKroO-"
+
+
+  },{
+    subject: "Electromagnetics Theory & Transmission Lines", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "ECE", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1EZoU99Dt1yXIndFyDHc47aCjPldGFfDk"
+
+
+  },{
+    subject: "Microprocessor & Microcontrollers", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "ECE", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1OTj39-R_tJ7VIjjy_kXpQOr9DFaTbqZ5"
+
+  },{
+    subject: "Microprocessor & Microcontrollers", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "ECE", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1qcAC7AawEyTC78mH1y0Orenq4tJXn4-_"
+
+  },{
+    subject: "Numerical Methods(ES)", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "ECE", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1rz2P1JEEaOUuYniTu8hW5ZIsy3KkThfr"
+
+  },{
+    subject: "Numerical Methods(ES)", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "ECE", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1xIi6bCqWwjBlhqnCvP-8_ZHQxY6qZQJ9"
+
+  },{
+    subject: "Data Structure and Algorithms", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Biotech", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "11fFwCBrSXbUoAoLd3yD5R0SR88zf5gSx"
+
+  },{
+    subject: "Data Structure and Algorithms", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Biotech", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1-gT5Z3vJjG_RWwIS6AQzTxbrNweotNZ3"
+
+  },{
+    subject: "Industrial Biotechnology and Enzyme Technology", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Biotech", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "18f532591-88uhA2QSA-svgz_jvqhcw_H"
+
+  },{
+    subject: "Industrial Biotechnology and Enzyme Technology", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Biotech", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1FOH0zio71rOtFbOODFNpUrkKVYV914OK"
+
+  },{
+    subject: "Molecular Biology", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Biotech", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1FQpHslCL5EBXTsAktS2bJHX6eHQDlzZT"
+
+  },{
+    subject: "Molecular Biology", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Biotech", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1WHGcSDboMp17kSfCMAKP3gaxp9X6A6UI"
+
+  },{
+    subject: "Numerical Methods and Biostatistic", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Biotech", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1Tcqg_fGqjvTwjiRqL6ejGG069CYmzTaX"
+
+  },{
+    subject: "Numerical Methods and Biostatistic", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Biotech", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1dGIn1LRU6xmEoQDvM4e60I02mm9J-wzf"
+
+  },{
+    subject: "Transfer Operation I ", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Biotech", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1crRRsnHqOHsMKMQPGKjXxrz9YTu6x0Jh"
+
+  },{
+    subject: "Transfer Operation I ", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Biotech", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1yErQNG_Onkseo65D8v3zhxxNIs5flvwr"
+
+  },{
+    subject: "Chemical Engineering Thermodynamics", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Chemical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "10Qd2iPIbBlOvL_efTvbQtj0-ZFN7sfLU"
+
+  },{
+    subject: "Chemical Engineering Thermodynamics", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Chemical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1DVKf_QotdAV9haOWGB4Ep_J3UdjsixyV"
+
+  },{
+    subject: "Heat Transfer", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Chemical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1_szAkuiNIVejYXreO5OnZm2ahpfcOMbM"
+
+  },{
+    subject: "Heat Transfer", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Chemical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1sdK1m-rR9GIGBMK-b8_o92Lrgu3HFJZB"
+
+  },{
+    subject: "Materials Science ", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Chemical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1g1vXMQ0c6ti2Q6r4zWKXHjNRqwX0_CUb"
+
+  },{
+    subject: "Materials Science ", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Chemical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1vCpWQESpNMUYvhFAqKnby2YlhhmZRk81"
+
+  },{
+    subject: "Numerical Methods in Chemical Engineering", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Chemical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1hqedt9Sf0AkdbxhgurlReWlztequZ5HE"
+
+  },{
+    subject: "Numerical Methods in Chemical Engineering", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Chemical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1y3SsOvDL7MBuO54IGbknsMWp9vq9Wnu8"
+
+  },{
+    subject: "Values and professional ethics", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Chemical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1ouv0mDqmlL6i1hhHNlpm-pfwdzPoLAbh"
+
+  },{
+    subject: "Values and professional ethics", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Chemical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1yzORpboFiWLE10Lh_ZCHY9QFdIWF227Z"
+  },
+
+  {
+    subject: "Applied Thermodynamics", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Mechanical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "18jwlZ-wK3b979_RJfmBsS1sW4vGlK90L"
+  },{
+    subject: "Applied Thermodynamics", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Mechanical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1-luS0ye3txy-URS4jJS4eWd030NCdOFi"
+  },{
+    subject: "Manufacturing Processes", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Mechanical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1JuB-SdoJepeo6frQjsh7sENKTuOK2qr_"
+  },{
+    subject: "Manufacturing Processes", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Mechanical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "11HwRoEnvly2mLWS5I5sxtU2T3nQ4-rzI"
+  },{
+    subject: "Metrology & Measurement", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Mechanical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1NacV_lvAwKE7HMqSamIgukSLLsCwZOWV"
+  },{
+    subject: "Metrology & Measurement", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Mechanical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1O002xoyJ6JGkKlzVdwd7_-1iKQelznyA"
+  },{
+    subject: "Strength of Materials", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Mechanical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1dLn4_-pmdWo4N0ZUXV9KlIsqtl62aQQB"
+  },{
+    subject: "Strength of Materials", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Mechanical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1eMCztfvOvRXW6oMn5-nAmHDeLVW6wf0H"
+  },{
+    subject: "Theory of Machines", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Mechanical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1fpJuIxyZeJOYHos_ZxN3F9Y-aeMv-Ln1"
+  },{
+    subject: "Theory of Machines", 
+    year: "2023", 
+    semester: "Semester 4", 
+    branch: "Mechanical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: "1nO91jLsB4sLhZmv2CNGYL9tMGxPcU7PQ"
+  },{
+    subject: "", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Electrical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: ""
+  },{
+    subject: "", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Electrical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: ""
+  },{
+    subject: "", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Electrical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: ""
+  },{
+    subject: "", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Electrical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: ""
+  },{
+    subject: "", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Electrical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: ""
+  },{
+    subject: "", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Electrical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: ""
+  },{
+    subject: "", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Electrical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: ""
+  },{
+    subject: "", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Electrical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: ""
+  },{
+    subject: "", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Electrical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: ""
+  },{
+    subject: "", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Electrical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: ""
+  },{
+    subject: "", 
+    year: "2025", 
+    semester: "Semester 4", 
+    branch: "Electrical", 
+    school: "School of Non Computer Science Engineering",
+    fileId: ""
+  },
+  
+
+
   /* 
     ─────────────────────────────────────────────
     ADD MORE PAPERS BELOW IN THE SAME FORMAT
@@ -1536,84 +2271,38 @@ school.addEventListener("change", () => {
 
 /* =========================================
    DYNAMIC SUBJECT DROPDOWN
-   (AUTO SHOWS ONLY AVAILABLE SUBJECTS)
 ========================================= */
 
 function updateSubjects() {
-
-  /* GET CURRENT VALUES */
-
   const selectedSchool = school.value;
   const selectedBranch = branch.value;
   const selectedSemester = semester.value;
 
-  /* CLEAR OLD SUBJECTS */
-
-  subject.innerHTML =
-    '<option value="">Select Subject</option>';
-
-  /* FILTER MATCHING PAPERS */
+  subject.innerHTML = '<option value="">Select Subject</option>';
 
   let filtered = papers.filter(p => {
-
-    /* SCHOOL CHECK */
-
-    const schoolMatch =
-      !selectedSchool ||
-      p.school === selectedSchool;
-
-    /* BRANCH CHECK */
-
-    const branchMatch =
-      !selectedBranch ||
-
-      (
-        Array.isArray(p.branch)
-          ? p.branch.includes(selectedBranch)
-          : p.branch === selectedBranch
-      );
-
-    /* SEMESTER CHECK */
-
-    const semesterMatch =
-      !selectedSemester ||
-      p.semester === selectedSemester;
-
-    return (
-      schoolMatch &&
-      branchMatch &&
-      semesterMatch
+    const schoolMatch = !selectedSchool || p.school === selectedSchool;
+    const branchMatch = !selectedBranch || (
+      Array.isArray(p.branch)
+        ? p.branch.includes(selectedBranch)
+        : p.branch === selectedBranch
     );
+    const semesterMatch = !selectedSemester || p.semester === selectedSemester;
+    return schoolMatch && branchMatch && semesterMatch;
   });
 
-  /* GET UNIQUE SUBJECTS */
-
-  const subjects = [
-    ...new Set(filtered.map(p => p.subject))
-  ];
-
-  /* ADD SUBJECTS TO DROPDOWN */
+  const subjects = [...new Set(filtered.map(p => p.subject))].filter(s => s);
 
   subjects.forEach(sub => {
-
-    const option =
-      document.createElement("option");
-
+    const option = document.createElement("option");
     option.value = sub;
     option.textContent = sub;
-
     subject.appendChild(option);
   });
 }
 
-/* =========================================
-   AUTO UPDATE SUBJECTS
-========================================= */
-
 school.addEventListener("change", updateSubjects);
-
 branch.addEventListener("change", updateSubjects);
-
 semester.addEventListener("change", updateSubjects);
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1690,14 +2379,14 @@ function renderPaperCard(paper) {
           </div>
         </div>
         <div class="paper-actions">
-          <button class="btn-action btn-view" onclick='openPdfModal(${JSON.stringify(paper).replace(/'/g, "&apos;")})'>
+          <button class="paper-action btn-view" onclick='openPdfModal(${JSON.stringify(paper).replace(/'/g, "&apos;")})'>
             <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
             </svg>
             View
           </button>
-          <button class="btn-action btn-download" onclick='downloadPdf("${paper.fileId}", "${filename}")'>
+          <button class="paper-action btn-download" onclick='downloadPdf("${paper.fileId}", "${filename}")'>
             <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
             </svg>
@@ -1711,10 +2400,31 @@ function renderPaperCard(paper) {
 
 /* ═══════════════════════════════════════════════════════════════
    FIND PAPERS
+   BUG FIX 1: Added hard gate — branch AND semester both required
+   before any results are shown.
 ═══════════════════════════════════════════════════════════════ */
 
 function findPapers() {
 
+  // ── VALIDATION GATE ──────────────────────────────────────────
+  // Both branch and semester must be selected before showing results.
+  if (!branch.value || !semester.value) {
+    const grid    = document.getElementById("paperGrid");
+    const title   = document.getElementById("resultsTitle");
+    const section = document.getElementById("results");
+
+    title.innerText = "Please select a branch and semester";
+    grid.innerHTML  = `
+      <div style="text-align: center; padding: 3rem; color: var(--text-gray);">
+        <p>Select at least a <strong>Branch</strong> and <strong>Semester</strong> to find papers.</p>
+      </div>
+    `;
+    section.classList.add("visible");
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+    return; // stop here — do not search
+  }
+
+  // ── FILTER ───────────────────────────────────────────────────
   let result = papers;
 
   if (school.value)
@@ -1732,6 +2442,9 @@ function findPapers() {
 
   if (subject.value)
     result = result.filter(p => p.subject === subject.value);
+
+  // Filter out entries with empty subject/fileId (placeholder rows)
+  result = result.filter(p => p.subject && p.subject.trim() !== "");
 
   displayResults(result);
 }
@@ -1758,41 +2471,23 @@ function displayResults(result) {
   }
 
   section.classList.add("visible");
+  section.scrollIntoView({ behavior: "smooth", block: "start" });
 }
+
 /* =========================================
    CSE / IT NOTICE
 ========================================= */
 
 function updateCseNotice() {
-
-  const cseNotice =
-    document.getElementById("cseNotice");
-
-  /* SHOW NOTICE FOR CSE OR IT */
-
-  if (
-    branch.value === "CSE" ||
-    branch.value === "IT"
-  ) {
-
+  const cseNotice = document.getElementById("cseNotice");
+  if (branch.value === "CSE" || branch.value === "IT") {
     cseNotice.style.display = "block";
-
-  }
-
-  /* HIDE FOR OTHER BRANCHES */
-
-  else {
-
+  } else {
     cseNotice.style.display = "none";
   }
 }
 
-/* RUN WHEN BRANCH CHANGES */
-
-branch.addEventListener(
-  "change",
-  updateCseNotice
-);
+branch.addEventListener("change", updateCseNotice);
 
 // Close modal when clicking outside
 document.getElementById("pdfModal").addEventListener("click", function(e) {
@@ -1807,3 +2502,39 @@ document.addEventListener("keydown", function(e) {
     closePdfModal();
   }
 });
+
+
+// ========ABOUT BUTTON========
+
+function openAboutModal() {
+  document.getElementById('aboutModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAboutModal() {
+  document.getElementById('aboutModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('aboutCloseBtn').addEventListener('click', closeAboutModal);
+
+document.getElementById('aboutModal').addEventListener('click', function(e) {
+  if (e.target === this) closeAboutModal();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeAboutModal();
+});
+
+
+/* =========================================
+   SHOW VOICE WARNING
+========================================= */
+
+function showVoiceWarning() {
+  const warning = document.getElementById("voiceWarning");
+  warning.style.display = "block";
+  setTimeout(() => {
+    warning.style.display = "none";
+  }, 5000);
+}

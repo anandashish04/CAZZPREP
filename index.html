@@ -28,13 +28,10 @@
   
   <div class="nav-links">
     <a href="#" class="nav-link active">Home</a>
-    <a href="#" class="nav-link">About</a>
+    <a href="#" class="nav-link" onclick="openAboutModal(); return false;">  About</a>
     
-    <a href="mailto:pyqkatalog.hit@gmail.com?subject=PYQ%20Website%20Query"
-   target="_blank"
-   class="nav-link">
-   Contact
-</a>
+    
+
     <a href="https://discord.gg/gqnSkvep" target="_blank"
      class="discord-btn">
      <i class="fab fa-discord"></i>
@@ -49,6 +46,114 @@
   </div>
 </nav>
 
+
+<!--ABOUT SECTION-->
+
+<!-- OVERLAY -->
+<div class="about-overlay" id="aboutModal">
+ 
+  <!-- MODAL CARD -->
+  <div class="about-modal">
+ 
+    <!-- HEADER -->
+    <div class="about-header">
+      <div class="about-header-left">
+        <div class="about-logo-icon">
+          <svg width="18" height="18" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+          </svg>
+        </div>
+        <div>
+          <p class="about-title">About CAZZPrep</p>
+          <p class="about-subtitle-tag">Built by students, for students</p>
+        </div>
+      </div>
+      <button class="about-close-btn" id="aboutCloseBtn">&times;</button>
+    </div>
+ 
+    <!-- BODY -->
+    <div class="about-body">
+ 
+      <!-- Intro block -->
+      <div class="about-intro-block">
+        <p>
+          CAZZPrep is a <span class="about-highlight">student-driven platform</span> designed to simplify access to Previous Year Question Papers and academic exam resources in one organized space.
+        </p>
+      </div>
+ 
+      <!-- Two stat cards -->
+      <div class="about-stat-grid">
+        <div class="about-stat-card">
+          <svg width="20" height="20" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <div>
+            <p class="stat-label">Coverage</p>
+            <p class="stat-value">Class Routines, Syllabus &amp; branch-wise PYQs</p>
+          </div>
+        </div>
+        <div class="about-stat-card">
+          <svg width="20" height="20" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <div>
+            <p class="stat-label">Purpose</p>
+            <p class="stat-value">Cazz the SEM</p>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Goal -->
+      <div class="about-section">
+        <p class="about-section-label">Our goal</p>
+        <p class="about-section-text">
+          Reduce the time students spend searching for PYQs across random groups, PDFs and chats — and instead provide a clean, fast and structured academic archive that keeps growing with new subjects, updated papers and smarter features.
+        </p>
+      </div>
+ 
+      <!-- What it is -->
+      <div class="about-section">
+        <p class="about-section-label">What it is</p>
+        <p class="about-section-text">
+          CAZZPrep is not just a static archive — it is being built as a collaborative academic resource where students can contribute missing papers, share important resources and help improve accessibility for everyone.
+        </p>
+      </div>
+ 
+      <!-- Features -->
+      <div class="about-section">
+        <p class="about-section-label">Features being built</p>
+        <div class="about-chips">
+          <span class="about-chip">Smart filtering</span>
+          <span class="about-chip">Voice search</span>
+          <span class="about-chip">Faculty suggestions</span>
+          <span class="about-chip">Resource organization</span>
+          <span class="about-chip">Paper contributions</span>
+          <span class="about-chip">Exam preparation tools</span>
+        </div>
+      </div>
+ 
+      <!-- Footer -->
+      <div class="about-footer">
+        <div class="about-footer-left">
+          <svg width="14" height="14" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+          </svg>
+          <span>Made for Hitians❤️</span>
+        </div>
+        <div class="about-footer-right">
+          <a href="mailto:pyqkatalog.hit@gmail.com?subject=CAZZPrep%20Query" class="about-footer-btn about-mail-btn">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            Contact
+          </a>
+          
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+</div>
 
 <!-- LANDING SECTION -->
 <section class="landing-section" id="landing">
@@ -91,8 +196,9 @@
     </h1>
 
     <p class="hero-subtitle">
-      This archive contains even Semesters Previous Year Question Papers of CSE Branches.<br>
-      Question papers of other Semesters are still being collected and will be added progressively.
+      This archive contains Previous Year Question Papers of CSE and Specialisation Branches.<br>
+      Resources for  1st and 2nd semesters of Core branches are included, especially for first-year students.<br>
+      Question papers of Odd Semesters are still being collected and will be added progressively.
     </p>
 
     <p class="community-note">This is a community-driven initiative.</p>
@@ -228,6 +334,84 @@
 <!-- HOME SECTION (Filter Section) -->
 <section class="home-section" id="home">
   <div class="home-container">
+
+
+    <!--=================== VOICE SEARCH SECTION =====================-->
+
+
+    <div class="voice-badge">✦ Try our Voice Search</div>
+ 
+  <!-- Main voice card -->
+  <div class="voice-card">
+ 
+    <!-- Top label -->
+    <div class="voice-label">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24" style="flex-shrink:0">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+        <line x1="12" y1="19" x2="12" y2="23"/>
+        <line x1="8" y1="23" x2="16" y2="23"/>
+      </svg>
+      Speak your branch, semester &amp; subject in any order
+    </div>
+ 
+    <!-- Voice search bar -->
+    <div class="voice-bar" id="voiceBar">
+ 
+      <!-- Mic button -->
+      <button class="mic-btn" id="micBtn" onclick="startVoiceSearch()" title="Click to speak">
+        <!-- Mic icon (idle) -->
+        <svg class="mic-icon" id="micIcon" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+        <!-- Waveform bars (visible while listening) -->
+        <span class="wave-bars" id="waveBars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </span>
+      </button>
+ 
+      <!-- Transcript display -->
+      <div class="voice-transcript" id="voiceTranscript">
+        <span class="placeholder-text" id="placeholderText">
+          Click the mic and say something like <em>"CSE semester 2 Physics"</em>
+        </span>
+        <span class="live-text" id="liveText"></span>
+      </div>
+ 
+      <!-- Clear button -->
+      <button class="clear-btn" id="clearBtn" onclick="clearVoice()" title="Clear" style="display:none">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+             viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+ 
+    <!-- Status message -->
+    <div class="voice-status" id="voiceStatus"></div>
+ 
+    <!-- Example chips -->
+    <div class="example-chips">
+      <span class="chip-label">Try saying:</span>
+      <button class="chip" onclick="simulateVoice('CSEDS semester 4 Linear Algebra')">Data Science semester 4 Linear Algebra</button>
+      <button class="chip" onclick="simulateVoice('semester 4 Probability and Statistics AIML')">semester 4 Probability and Statistics AIML</button>
+
+    </div>
+
+    <div class="voice-warning"
+     id="voiceWarning">
+
+  ⚠ Voice search may miss some subjects.
+  Try the dropdown filters for better accuracy.
+
+</div>
+  </div>
     
     <!-- Find Your PYQs -->
     <div class="find-section">
@@ -330,6 +514,7 @@
 
   </div>
 </section>
+
 
 <!-- PDF PREVIEW MODAL -->
 <div class="pdf-modal" id="pdfModal">
