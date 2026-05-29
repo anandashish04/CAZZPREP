@@ -28,17 +28,30 @@ function scrollToHome() {
    IMPROVED VOICE SEARCH — Subject Matching Logic
 ═══════════════════════════════════════════════════════════════ */
 
-// ── 1. BRANCH ALIAS MAP ──────────────────────────────────────
 const BRANCH_ALIASES = {
   "computer science":          "CSE",
   "comp sci":                  "CSE",
   "cse":                       "CSE",
   "cs e":                      "CSE",
   "c s e":                     "CSE",
+  "csc":                       "CSE",
+  "cs c ":                     "CSE",
   "information technology":    "IT",
-  "info tech":                 "IT",
   "it":                        "IT",
   "i t":                       "IT",
+  "data science":              "CSE-DS",
+  "cse ds":                    "CSE-DS",
+  "ds":                        "CSE-DS",
+  "d s":                       "CSE-DS",
+  "cseds":                     "CSE-DS",
+  "cyber security":            "CSE-CS",
+  "cse cs":                    "CSE-CS",
+  "c s":                       "CSE-CS",
+  "cse aiml":                  "CSE-AIML",
+  "aiml":                      "CSE-AIML",
+  "ai ml":                     "CSE-AIML",
+  "a i m l":                   "CSE-AIML",
+  "artificial intelligence and machine learning": "CSE-AIML",
   "electronics communication": "ECE",
   "electronics":               "ECE",
   "ece":                       "ECE",
@@ -48,16 +61,30 @@ const BRANCH_ALIASES = {
   "civil":                     "Civil",
   "electrical engineering":    "Electrical",
   "electrical":                "Electrical",
-  "data science":              "CSE-DS",
-  "cse ds":                    "CSE-DS",
-  "cseds":                     "CSE-DS",
-  "cyber security":            "CSE-CS",
-  "cse cs":                    "CSE-CS",
-  "c s":                       "CSE-CS",
-  "cse aiml":                  "CSE-AIML",
-  "aiml":                      "CSE-AIML",
-  "ai ml":                     "CSE-AIML",
-  "artificial intelligence and machine learning": "CSE-AIML"
+  "biotech":                   "Biotech",
+  "biotechnology":             "Biotech",
+  "chemical engineering":      "Chemical",
+  "chemical":                  "Chemical",
+  "aeie":                      "AEIE",
+  "ft":                        "FT"
+};
+
+// Which school each branch belongs to — needed to pre-select school
+// so the branch dropdown actually gets populated before we try to set it
+const BRANCH_TO_SCHOOL = {
+  "CSE":        "School of Computer Science Engineering",
+  "CSE-DS":     "School of Computer Science Engineering",
+  "CSE-AIML":   "School of Computer Science Engineering",
+  "CSE-CS":     "School of Computer Science Engineering",
+  "IT":         "School of Computer Science Engineering",
+  "ECE":        "School of Non Computer Science Engineering",
+  "Mechanical": "School of Non Computer Science Engineering",
+  "Civil":      "School of Non Computer Science Engineering",
+  "Electrical": "School of Non Computer Science Engineering",
+  "Chemical":   "School of Non Computer Science Engineering",
+  "Biotech":    "School of Non Computer Science Engineering",
+  "AEIE":       "School of Non Computer Science Engineering",
+  "FT":         "School of Non Computer Science Engineering"
 };
 
 // Maps spoken number words → digits
@@ -67,9 +94,7 @@ const NUMBER_WORDS = {
 };
 
 
-/* ── 2. NORMALIZE HELPER ────────────────────────────────────────
-   Strips spaces, lowercases, removes punctuation.
-*/
+/* ── NORMALIZE HELPER ───────────────────────────────────────────*/
 function normalizeText(text) {
   return text
     .toLowerCase()
@@ -78,44 +103,21 @@ function normalizeText(text) {
     .trim();
 }
 
-/* ── 3. DYNAMIC SUBJECT MATCHER ─────────────────────────────────
-   Reads subject options directly from the dropdown at runtime.
-*/
-function matchSubjectFromDropdown(normalizedVoice) {
-  const subjectSelect = document.getElementById("subject");
-  if (!subjectSelect) return null;
 
-  for (const option of subjectSelect.options) {
-    const optionText = option.text.trim();
-    if (!optionText || option.value === "") continue;
-
-    const normalizedOption = normalizeText(optionText);
-
-    if (
-      normalizedVoice.includes(normalizedOption) ||
-      normalizedOption.includes(normalizedVoice)
-    ) {
-      return optionText;
-    }
-  }
-
-  return null;
-}
-
-
-/* ── 4. PARSE VOICE INPUT ───────────────────────────────────────
-   Extracts branch, semester, and subject from raw spoken text.
+/* ── PARSE VOICE INPUT ──────────────────────────────────────────
+   Extracts branch and semester only.
+   Subject is handled via dropdown by the user.
 */
 function parseVoiceInput(text) {
   let raw = text.toLowerCase().trim();
 
+  // Replace spoken numbers → digits
   Object.entries(NUMBER_WORDS).forEach(([word, digit]) => {
     raw = raw.replace(new RegExp(`\\b${word}\\b`, "g"), digit);
   });
 
   let branch   = null;
   let semester = null;
-  let subject  = null;
 
   // ── Detect SEMESTER ─────────────────────────────────────────
   const semMatch =
@@ -123,8 +125,7 @@ function parseVoiceInput(text) {
     raw.match(/\b([1-8])(?:st|nd|rd|th)?\s*(?:semester|sem)\b/);
   if (semMatch) semester = semMatch[1];
 
-  // ── Detect BRANCH via alias map ─────────────────────────────
-  // Longest alias matched first
+  // ── Detect BRANCH (longest alias first to avoid partial hits)
   const sortedBranchAliases = Object.entries(BRANCH_ALIASES)
     .sort((a, b) => b[0].length - a[0].length);
 
@@ -135,35 +136,22 @@ function parseVoiceInput(text) {
     }
   }
 
-  // ── Detect SUBJECT — dynamic ─────────────────────────────────
-  const normalizedVoice = normalizeText(raw);
-  subject = matchSubjectFromDropdown(normalizedVoice);
-
-  return { branch, semester, subject };
+  return { branch, semester };
 }
 
 
-/* ── 5. AUTO-SELECT DROPDOWNS ───────────────────────────────────
-   BUG FIX: Changed branch matching from opt.text.includes(value)
-   to an EXACT match (case-insensitive) so "CSE" never accidentally
-   selects "CSE-DS", "CSE-AIML", etc.
+/* ── APPLY TO DROPDOWNS ─────────────────────────────────────────
+   KEY FIX: Sets school first (which populates the branch dropdown
+   via its change event), then sets branch, then semester.
+   Without this, the branch <select> is empty and nothing matches.
 */
-function applyToDropdowns({ branch, semester, subject }) {
+function applyToDropdowns({ branch, semester }) {
 
-  function setSelect(id, value, exactMatch = false) {
-    if (!value) return false;
+  function setSelectByText(id, matchFn) {
     const sel = document.getElementById(id);
     if (!sel) return false;
-
     for (const opt of sel.options) {
-      const optText = opt.text.trim();
-
-      // BUG FIX: use exact match for branch to prevent "CSE" hitting "CSE-DS"
-      const matched = exactMatch
-        ? optText.toLowerCase() === value.toLowerCase()
-        : optText.toLowerCase().includes(value.toLowerCase());
-
-      if (matched) {
+      if (matchFn(opt.text.trim())) {
         sel.value = opt.value;
         sel.dispatchEvent(new Event("change"));
         return true;
@@ -172,16 +160,32 @@ function applyToDropdowns({ branch, semester, subject }) {
     return false;
   }
 
-  // Branch uses exactMatch = true  ← KEY FIX
-  const branchSet   = branch   ? setSelect("branch",   branch,                 true)  : false;
-  const semesterSet = semester  ? setSelect("semester", "Semester " + semester, false) : false;
-  const subjectSet  = subject   ? setSelect("subject",  subject,               true)  : false;
+  // 1. Set SCHOOL — fires change event which populates branch dropdown
+  let schoolSet = false;
+  if (branch && BRANCH_TO_SCHOOL[branch]) {
+    const targetSchool = BRANCH_TO_SCHOOL[branch];
+    schoolSet = setSelectByText("school", t => t === targetSchool);
+  }
 
-  return { branchSet, semesterSet, subjectSet };
+  // 2. Set BRANCH — exact match so "CSE" never hits "CSE-DS" etc.
+  let branchSet = false;
+  if (branch) {
+    branchSet = setSelectByText("branch", t => t.toLowerCase() === branch.toLowerCase());
+  }
+
+  // 3. Set SEMESTER
+  let semesterSet = false;
+  if (semester) {
+    semesterSet = setSelectByText("semester", t =>
+      t.toLowerCase().includes("semester " + semester)
+    );
+  }
+
+  return { schoolSet, branchSet, semesterSet };
 }
 
 
-/* ── 6. STATUS DISPLAY ──────────────────────────────────────────*/
+/* ── STATUS DISPLAY ─────────────────────────────────────────────*/
 function setVoiceStatus(msg, type = "info") {
   const el = document.getElementById("voiceStatus");
   if (!el) return;
@@ -190,91 +194,62 @@ function setVoiceStatus(msg, type = "info") {
 }
 
 
-/* ── 7. CLEAR VOICE UI ──────────────────────────────────────────*/
+/* ── CLEAR VOICE UI ─────────────────────────────────────────────*/
 function clearVoice() {
-  document.getElementById("liveText").textContent        = "";
+  document.getElementById("liveText").textContent          = "";
   document.getElementById("placeholderText").style.display = "";
-  document.getElementById("clearBtn").style.display      = "none";
-  document.getElementById("voiceStatus").textContent     = "";
+  document.getElementById("clearBtn").style.display        = "none";
+  document.getElementById("voiceStatus").textContent       = "";
   document.getElementById("voiceBar").classList.remove("listening");
   document.getElementById("micBtn").classList.remove("listening");
 }
 
 
-/* ── 8. PROCESS TRANSCRIPT ──────────────────────────────────────
-   BUG FIX 2 & 3:
-   - findPapers() is now only called when branch AND semester are
-     detected (minimum required), AND subject is also found.
-   - If subject is missing after dropdown populates, we show a
-     warning and do NOT call findPapers().
+/* ── PROCESS TRANSCRIPT ─────────────────────────────────────────
+   Requires both branch and semester. Auto-selects school → branch
+   → semester in the right order, then calls findPapers().
 */
 function processTranscript(transcript) {
-  const parsed = parseVoiceInput(transcript);
+  const { branch, semester } = parseVoiceInput(transcript);
 
-  // Apply branch + semester first
-  const { branchSet, semesterSet } = applyToDropdowns({
-    branch:   parsed.branch,
-    semester: parsed.semester,
-    subject:  null
-  });
+  if (!branch && !semester) {
+    setVoiceStatus("⚠ Couldn't detect branch or semester. Please try again.", "error");
+    return;
+  }
+  if (!branch) {
+    setVoiceStatus("⚠ Branch not detected — please mention your branch clearly.", "error");
+    return;
+  }
+  if (!semester) {
+    setVoiceStatus("⚠ Semester not detected — please mention your semester clearly.", "error");
+    return;
+  }
 
-  const anyMatch = branchSet || semesterSet;
+  const { branchSet, semesterSet } = applyToDropdowns({ branch, semester });
 
-  if (!anyMatch) {
+  const parts = ["Branch: " + branch, "Semester: " + semester];
+
+  if (!branchSet || !semesterSet) {
     setVoiceStatus(
-      "⚠ Couldn't detect branch or semester. Please try again.",
+      "⚠ Detected " + parts.join(" · ") + " but couldn't apply to dropdowns. Please select manually.",
       "error"
     );
     return;
   }
 
-  // Wait 700ms for branch/semester dropdowns to cascade and populate subject dropdown
+  setVoiceStatus(
+    "✔ " + parts.join(" · ") + " — showing all available papers. Use the Subject dropdown to filter further.",
+    "success"
+  );
+
+  // Small delay to let dropdown cascade finish, then search
   setTimeout(() => {
-
-    // NOW try to match subject after dropdown is populated
-    const normalizedVoice = normalizeText(transcript);
-    parsed.subject = matchSubjectFromDropdown(normalizedVoice);
-
-    // Build status message parts
-    const parts = [];
-    if (parsed.branch)   parts.push("Branch: "   + parsed.branch);
-    if (parsed.semester) parts.push("Semester: " + parsed.semester);
-    if (parsed.subject)  parts.push("Subject: "  + parsed.subject);
-
-    // BUG FIX 3: Only call findPapers if branch + semester + subject are ALL detected.
-    // If any are missing, show a helpful message and stop — do not show papers.
-    if (!parsed.branch || !parsed.semester) {
-      setVoiceStatus(
-        "⚠ Please say both your branch and semester clearly.",
-        "error"
-      );
-      return;
-    }
-
-    if (!parsed.subject) {
-      // Apply branch/semester to dropdowns so the user can manually pick subject
-      setVoiceStatus(
-        "✔ Detected — " + parts.join(" · ") +
-        " · ⚠ Subject not recognised — please select it from the dropdown, then click Find PYQs.",
-        "info"
-      );
-      // Do NOT call findPapers — subject is required before showing results
-      return;
-    }
-
-    // All three detected — apply subject and search
-    applyToDropdowns({ branch: null, semester: null, subject: parsed.subject });
-
-    setVoiceStatus("✔ Detected — " + parts.join(" · "), "success");
-
-    setTimeout(() => {
-      if (typeof findPapers === "function") findPapers();
-    }, 400);
-
-  }, 700);
+    if (typeof findPapers === "function") findPapers();
+  }, 400);
 }
 
-/* ── 9. SIMULATE VOICE (for demo chips) ─────────────────────────*/
+
+/* ── SIMULATE VOICE (for demo chips) ───────────────────────────*/
 function simulateVoice(text) {
   document.getElementById("liveText").textContent          = text;
   document.getElementById("placeholderText").style.display = "none";
@@ -283,7 +258,7 @@ function simulateVoice(text) {
 }
 
 
-/* ── 10. MAIN VOICE RECOGNITION FUNCTION ───────────────────────*/
+/* ── MAIN VOICE RECOGNITION FUNCTION ───────────────────────────*/
 let recognition = null;
 
 function startVoiceSearch() {
