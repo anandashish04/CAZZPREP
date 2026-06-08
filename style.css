@@ -38,6 +38,7 @@ nav {
   left: 0;
   right: 0;
   display: flex;
+  
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 2rem;
@@ -75,6 +76,7 @@ nav {
   display: flex;
   gap: 2.5rem;
   align-items: center;
+  margin-left: auto;
 }
 
 .nav-link {
@@ -84,6 +86,7 @@ nav {
   font-size: 0.95rem;
   transition: color 0.3s;
   position: relative;
+  
 }
 
 .nav-link:hover,
@@ -126,12 +129,12 @@ nav {
    LANDING SECTION
 ══════════════════════════════════════════ */
 .landing-section {
-  min-height: 100vh;
+  min-height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 6rem 2rem 4rem;
+  padding: 4rem 1rem 2rem;
   position: relative;
   overflow: hidden;
 }
@@ -163,14 +166,12 @@ nav {
 /* Book illustration */
 .book-container {
   position: relative;
-  margin-bottom: 2rem;
-  animation: bookFloat 3s ease-in-out infinite;
+  
+  margin-bottom: 1.2rem;
+  
 }
 
-@keyframes bookFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
+
 
 .book-glow {
   position: absolute;
@@ -180,16 +181,13 @@ nav {
   animation: pulse 4s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
 
 .book-icon {
-  width: 280px;
-  height: 200px;
+  width: 100px;
+  height: auto;
   position: relative;
   z-index: 1;
+  margin-top: 0rem;
 }
 
 /* Hero content */
@@ -198,6 +196,26 @@ nav {
   max-width: 900px;
   position: relative;
   z-index: 1;
+  margin-top: -20px;
+}
+
+.hero-badge-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.cazz-logo-svg {
+  width: 320px;
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 480px) {
+  .cazz-logo-svg {
+    width: 260px;
+  }
 }
 
 .hero-badge {
@@ -221,10 +239,10 @@ nav {
 }
 
 .hero-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 1.5rem;
+  font-size: clamp(14px, 2vw, 25px );
+
+  font-weight: 500;
+  margin-bottom: 0.75rem;
 }
 
 .hero-title .highlight {
@@ -235,21 +253,57 @@ nav {
   font-size: 1.1rem;
   color: var(--text-gray);
   line-height: 1.8;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
-.community-note {
-  color: var(--orange);
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+.hero-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 1.75rem;
 }
 
-.community-text {
-  color: var(--text-dim);
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin-bottom: 3rem;
+/* Resources CTA — outlined style to differentiate from filled PYQs btn */
+.resources-cta-btn {
+  background: var(--orange);
+  color: white;
+  border: none;
+  padding: 1.2rem 3rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: 0 10px 40px rgba(255, 107, 53, 0.4);
+  text-decoration: none;
 }
+
+.resources-cta-btn:hover {
+  background: var(--orange-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 50px rgba(255, 107, 53, 0.5);
+}
+
+.resources-cta-btn:active {
+  transform: translateY(0);
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .hero-btns {
+    gap: 10px;
+  }
+  .resources-cta-btn {
+    padding: 12px 22px;
+    font-size: 14px;
+  }
+}
+
 
 .study-btn {
   background: var(--orange);
@@ -271,22 +325,6 @@ nav {
   background: var(--orange-dark);
   transform: translateY(-2px);
   box-shadow: 0 15px 50px rgba(255, 107, 53, 0.5);
-}
-
-.scroll-indicator {
-  margin-top: 3rem;
-  animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(10px); }
-}
-
-.scroll-arrow {
-  width: 30px;
-  height: 30px;
-  color: var(--orange);
 }
 
 
@@ -688,22 +726,22 @@ select:focus {
   grid-template-columns: 1.15fr 1fr;
   gap: 1.5rem;
   width: 100%;
-  max-width: 1000px;          /* ← was 1000px */
-  margin-top: 4rem;
-   margin-left: auto;        /* ← add this */
-  margin-right: auto;       /* ← add this */
+  max-width: 1000px;          
+  margin-top: 1.5rem;
+   margin-left: auto;       
+  margin-right: auto;       
 
-  padding: 0 1rem;          /* ← add this so cards don't touch screen edges */
+  padding: 0 1rem;         
   position: relative;
   z-index: 1;
-  box-sizing: border-box;   /* ← add this */
+  box-sizing: border-box;   
 }
 
 .info-card {
   background: rgba(26, 26, 26, 0.85);
   border: 1px solid rgba(255, 107, 53, 0.18);
   border-radius: 18px;
-  padding: 2rem 2rem 1.8rem;
+  padding: 1.25rem 2rem 1.8rem;
   backdrop-filter: blur(8px);
 }
 
@@ -1378,6 +1416,7 @@ body::after {
   max-width: 580px;
   overflow: hidden;
   animation: modalSlideIn 0.25s ease;
+  
 }
 @keyframes modalSlideIn {
   from { opacity: 0; transform: translateY(16px); }
@@ -1587,6 +1626,9 @@ body::after {
  
 /* Mobile */
 @media (max-width: 500px) {
+  .about-modal{ max-height: 80vh;
+
+  overflow-y: auto; }
   .about-stat-grid { grid-template-columns: 1fr; }
   .about-footer { flex-direction: column; align-items: flex-start; }
 }
@@ -2202,4 +2244,100 @@ FOR ANDROID USERS
     border-radius: 12px;
   }
 
+}
+
+
+/* ══════════════════════════════════════════
+   NAVBAR DROPDOWN & CHEVRON*/
+
+/* Chevron animation */
+.chevron { transition: transform 0.25s ease; flex-shrink: 0; }
+.chevron.open { transform: rotate(180deg); }
+
+/* Resources Dropdown */
+.nav-dropdown { position: relative; }
+
+.dropdown-trigger { position: relative; }
+
+.dropdown-panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 240px;
+  background: #1a1a1a;
+  border: 1px solid var(--orange-border);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(249,115,22,0.08);
+  overflow: hidden;
+  animation: dropdownFade 0.18s ease;
+  z-index: 200;
+}
+.dropdown-panel.open { display: block; }
+
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: var(--text);
+  transition: background 0.15s;
+  min-height: 48px;
+}
+.dropdown-item:hover { background: rgba(249,115,22,0.08); }
+.dropdown-item + .dropdown-item { border-top: 1px solid rgba(255,255,255,0.05); }
+
+.dropdown-emoji { font-size: 18px; flex-shrink: 0; }
+.dropdown-item-title { font-size: 13.5px; font-weight: 600; color: #fff; margin: 0; }
+.dropdown-item-sub   { font-size: 11.5px; color: var(--text-dim); margin: 2px 0 0; }
+
+.resources-btn {
+  display: inline-flex;
+  background: transparent;
+  border: 1px solid var(--orange);
+  color: var(--orange);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.resources-btn:hover {
+  background: rgba(249, 115, 22, 0.15);
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.3);
+}
+.resources-btn .chevron {
+  color: #f97316;
+}
+
+.school-warning {
+
+  margin-top: 12px;
+
+  padding: 12px 16px;
+
+  border-radius: 12px;
+
+  background: rgba(255, 122, 0, 0.08);
+
+  border: 1px solid rgba(255, 122, 0, 0.18);
+
+  color: rgba(255,255,255,0.85);
+
+  font-size: 0.92rem;
+
+  line-height: 1.6;
 }

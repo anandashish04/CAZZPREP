@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resources — CAZZPrep</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="resources.css"/>
+</head>
+<body>
+
+<!-- ── NAVBAR ─────────────────────────────────────────────────── -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="logo">
+    <svg class="logo-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13
+           C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13
+           C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13
+           C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+    </svg>
+    <span class="logo-text">CAZZ<span>Prep</span></span>
+  </a>
+
+  <!-- Desktop nav -->
+  <div class="nav-links" id="navLinks">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="#" class="nav-link" onclick="openAboutModal(); return false;">About</a>
+
+    <!-- Resources dropdown -->
+    <div class="nav-dropdown" id="resourcesDropdown">
+      <button class="nav-link dropdown-trigger active" id="dropdownTrigger"
+              aria-expanded="false" aria-haspopup="true">
+        Resources
+        <svg class="chevron" width="14" height="14" fill="none" stroke="currentColor"
+             stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+      <div class="dropdown-panel" id="dropdownPanel" role="menu">
+        <a href="#routines" class="dropdown-item" role="menuitem" onclick="closeDropdown()">
+          <span class="dropdown-emoji">📅</span>
+          <div>
+            <p class="dropdown-item-title">Class Routines</p>
+            <p class="dropdown-item-sub">Branch-wise weekly schedules</p>
+          </div>
+        </a>
+        <a href="#syllabus" class="dropdown-item" role="menuitem" onclick="closeDropdown()">
+          <span class="dropdown-emoji">📖</span>
+          <div>
+            <p class="dropdown-item-title">Syllabus</p>
+            <p class="dropdown-item-sub">Semester-wise subject list</p>
+          </div>
+        </a>
+        <a href="#notices" class="dropdown-item" role="menuitem" onclick="closeDropdown()">
+          <span class="dropdown-emoji">📢</span>
+          <div>
+            <p class="dropdown-item-title">Notices</p>
+            <p class="dropdown-item-sub">Exam dates &amp; circulars</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  
+  </div>
+
+  <!-- Hamburger (mobile) -->
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" class="mobile-link">Home</a>
+  <a href="#" class="mobile-link" onclick="openAboutModal(); closeMobileMenu(); return false;">About</a>
+
+  <div class="mobile-resources">
+    <button class="mobile-link mobile-resources-trigger" id="mobileResourcesTrigger">
+      Resources
+      <svg class="chevron" width="14" height="14" fill="none" stroke="currentColor"
+           stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </button>
+    <div class="mobile-resources-panel" id="mobileResourcesPanel">
+      <a href="#routines" class="mobile-sub-link" onclick="closeMobileMenu()">📅 Class Routines</a>
+      <a href="#syllabus" class="mobile-sub-link" onclick="closeMobileMenu()">📖 Syllabus</a>
+      <a href="#notices"  class="mobile-sub-link" onclick="closeMobileMenu()">📢 Notices</a>
+    </div>
+  </div>
+
+  <a href="https://discord.gg/gqnSkvep" target="_blank" class="mobile-link">Discord</a>
+</div>
+
+
+<!-- ── PAGE WRAPPER ───────────────────────────────────────────── -->
+<main class="page-main">
+
+  <!-- Page hero -->
+  <div class="page-hero">
+    <div class="page-hero-badge">Academic Resources</div>
+    <h1 class="page-hero-title">Everything you need,<br><span>in one place</span></h1>
+    <p class="page-hero-sub">Class routines, syllabi and notices — organized for Hitians.</p>
+  </div>
+
+  <!-- ══ SECTION 1 — CLASS ROUTINES ══════════════════════════ -->
+  <section class="res-section" id="routines">
+    <div class="section-head">
+      <div class="section-icon-wrap">
+        <span>📅</span>
+      </div>
+      <div>
+        <h2 class="section-title">Class Routines</h2>
+        <p class="section-desc">Branch-wise weekly schedules</p>
+      </div>
+    </div>
+    <div class="section-divider"></div>
+
+    <div class="search-bar-wrap">
+      <div class="search-bar">
+        <input type="text" id="routineSearch" class="search-input"
+               placeholder="Enter branch &amp; batch (e.g. CSE 1, DS 2)"
+               inputmode="search" autocomplete="off"/>
+        <button class="search-btn" onclick="searchRoutine()" aria-label="Search">
+          <svg width="18" height="18" fill="none" stroke="currentColor"
+               stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="res-result" id="routineResult"></div>
+  </section>
+
+
+  <!-- ══ SECTION 2 — SYLLABUS ════════════════════════════════ -->
+  <section class="res-section" id="syllabus">
+    <div class="section-head">
+      <div class="section-icon-wrap">
+        <span>📖</span>
+      </div>
+      <div>
+        <h2 class="section-title">Syllabus</h2>
+        <p class="section-desc">Semester-wise subject list</p>
+      </div>
+    </div>
+    <div class="section-divider"></div>
+
+    <div class="search-bar-wrap">
+      <div class="search-bar">
+        <input type="text" id="syllabusSearch" class="search-input"
+               placeholder="Enter branch & even semester (e.g. CSE 2, DS 4)"
+               inputmode="search" autocomplete="off"/>
+        <button class="search-btn" onclick="searchSyllabus()" aria-label="Search">
+          <svg width="18" height="18" fill="none" stroke="currentColor"
+               stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="res-result" id="syllabusResult"></div>
+  </section>
+
+
+  <!-- ══ SECTION 3 — NOTICES ════════════════════════════════ -->
+  <section class="res-section" id="notices">
+    <div class="section-head">
+      <div class="section-icon-wrap">
+        <span>📢</span>
+      </div>
+      <div>
+        <h2 class="section-title">Notices</h2>
+        <p class="section-desc">Exam dates &amp; circulars</p>
+      </div>
+    </div>
+    <div class="section-divider"></div>
+
+    <div class="notices-list" id="noticesList"></div>
+  </section>
+
+</main>
+
+
+<!-- ── LIGHTBOX MODAL ─────────────────────────────────────────── -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="Notice"/>
+</div>
+
+
+<!-- ── ABOUT MODAL (placeholder — wire to your existing one) ──── -->
+<div class="about-overlay" id="aboutModal">
+  <div class="about-modal-inner">
+    <div class="about-modal-header">
+      <p class="about-modal-title">About CAZZPrep</p>
+      <button class="about-close-btn" onclick="closeAboutModal()">&times;</button>
+    </div>
+    <div class="about-modal-body">
+      <p>CAZZPrep is a student-driven platform designed to simplify access to Previous Year Question Papers and academic resources in one organized space.</p>
+      <p style="margin-top:0.75rem; color:#f97316; font-size:13px;">Built by students, for students — Made for Hitians ❤️</p>
+    </div>
+  </div>
+</div>
+
+
+<script src="resources.js"></script>
+</body>
+</html>

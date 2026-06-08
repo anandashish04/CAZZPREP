@@ -2449,6 +2449,28 @@ function displayResults(result) {
   section.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+/*===================================================
+CORE NOTICE
+If a core branch is selected, show a notice that core branch papers are not available yet.
+===================================================*/
+
+const schoolSelect = document.getElementById("school");
+const schoolWarning = document.getElementById("schoolWarning");
+
+schoolSelect.addEventListener("change", function () {
+
+  if (this.value === "School of Non Computer Science Engineering") {
+
+    schoolWarning.style.display = "block";
+
+  } else {
+
+    schoolWarning.style.display = "none";
+
+  }
+
+});
+
 /* =========================================
    CSE / IT NOTICE
 ========================================= */
@@ -2513,3 +2535,31 @@ function showVoiceWarning() {
     warning.style.display = "none";
   }, 5000);
 }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   NAVBAR — RESOURCES DROPDOWN (desktop click toggle)
+   ═══════════════════════════════════════════════════════════════ */
+const dropdownTrigger = document.getElementById("dropdownTrigger");
+const dropdownPanel   = document.getElementById("dropdownPanel");
+
+dropdownTrigger.addEventListener("click", function (e) {
+  e.stopPropagation();
+  const isOpen = dropdownPanel.classList.contains("open");
+  dropdownPanel.classList.toggle("open", !isOpen);
+  dropdownTrigger.querySelector(".chevron").classList.toggle("open", !isOpen);
+  this.setAttribute("aria-expanded", String(!isOpen));
+});
+
+function closeDropdown() {
+  dropdownPanel.classList.remove("open");
+  dropdownTrigger.querySelector(".chevron").classList.remove("open");
+  dropdownTrigger.setAttribute("aria-expanded", "false");
+}
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function (e) {
+  if (!document.getElementById("resourcesDropdown").contains(e.target)) {
+    closeDropdown();
+  }
+});
