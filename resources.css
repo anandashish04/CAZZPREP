@@ -482,6 +482,7 @@ body {
   margin: 0;
 }
 .notice-view-btn {
+  text-decoration: none;
   margin-top: 10px;
   display: inline-flex;
   align-items: center;
@@ -593,6 +594,19 @@ body {
   color: #fff;
   margin: 0;
 }
+.about-modal-footer-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 8px;
+ background: rgba(249, 115, 22, 0.1);
+  border: 1px solid rgba(249, 115, 22, 0.25);
+  color: #fb923c;
+}
 .about-close-btn {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.1);
@@ -642,10 +656,15 @@ body {
 
 .result-img-wrap {
 
-  overflow-x: auto;
-  overflow-y: hidden;
+  width: 100%;
 
-  cursor: grab;
+  overflow: auto;
+
+  border-radius: 12px;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: thin;
 }
 
 
@@ -666,4 +685,85 @@ body {
   /* Hover open dropdown on desktop */
   .nav-dropdown:hover .dropdown-panel { display: block; }
   .nav-dropdown:hover .chevron { transform: rotate(180deg); }
+}
+
+
+/* =========================================
+   CONTRIBUTION FOOTER
+========================================= */
+
+.contribution-footer {
+
+  margin-top: 0rem;
+
+  padding: 2rem;
+
+  color:#701a1a;
+  background: rgba(162, 159, 158, 0.08);
+
+  border-top: 1px solid rgba(249,115,22,0.15);
+
+}
+
+.contribution-content {
+
+  max-width: 700px;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.contribution-title {
+
+  color: #f97316;
+
+  font-size: 1.1rem;
+
+  font-weight: 600;
+
+  margin-bottom: 0.8rem;
+}
+
+.contribution-text {
+
+  color: rgba(255,255,255,0.75);
+
+  font-size: 0.95rem;
+
+  line-height: 1.8;
+
+  margin-bottom: 1.25rem;
+}
+
+.contribution-btn {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 12px 18px;
+
+  border-radius: 12px;
+
+  background: rgba(131, 128, 126, 0.08);
+
+  border: 1px solid rgba(249,115,22,0.25);
+
+  color: #fb923c;
+
+  text-decoration: none;
+
+  transition: 0.3s ease;
+}
+
+.contribution-btn:hover {
+
+  background: rgba(249,115,22,0.15);
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 0 20px rgba(249,115,22,0.15);
 }

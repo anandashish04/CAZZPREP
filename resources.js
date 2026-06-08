@@ -9,15 +9,15 @@
    ═══════════════════════════════════════════════════════════════ */
 
 const BRANCH_INPUT_ALIASES = {
-  "cse": "cse", "computer science": "cse", "comp sci": "cse", 
-   "aiml": "cse-aiml", "ai ml": "cse-aiml",
-  "cse-ds": "cse-ds", "ds": "cse-ds", "data science": "cse-ds", "cse ds": "cse-ds",
+  "aiml": "cse-aiml", "ai ml": "cse-aiml", "cse aiml": "cse-aiml", 
+  "cse-ds": "cse-ds", "cse ds": "cse-ds", "data science": "cse-ds", "ds": "cse-ds", 
   "cse-cs": "cse-cs", "cyber security": "cse-cs", "cybersecurity": "cse-cs", "cse cs": "cse-cs", "cs": "cse-cs",
   "it": "it", "information technology": "it", "info tech": "it",
+  "computer science": "cse", "comp sci": "cse", "cse": "cse",
   "ece": "ece", "electronics": "ece", "electronics and communication": "ece",
   "me": "me", "mechanical": "me", "mechanical engineering": "me",
   "ce": "ce", "civil": "ce", "civil engineering": "ce",
-  "ee": "ee", "electrical": "ee", "electrical engineering": "ee","chemical": "chemical", "chemical engineering": "chemical",
+  "ee": "ee", "electrical": "ee", "electrical engineering": "ee","chemical": "chemical", "chemical engineering": "chemical","che": "chemical",
   "aeie": "aeie", "applied instrumentation": "aeie", 
   "bt": "bt", "biotech": "bt", "biotechnology": "bt",
   "ft": "ft", "food tech": "ft", "food technology": "ft",
@@ -144,15 +144,21 @@ const syllabusData = {
 const notices = [
   {
     date: "2025-05-26",
+    title: "Teacher Invigilation",
+    description: "Teachers assigned for invigilation duty during semester exams.",
+    pdfUrl: "https://drive.google.com/file/d/1Q_9NawSlYPMBD9H_s6TG0lpRjSiTbbBL/view?usp=drive_link"
+  },
+  {
+    date: "2025-05-26",
     title: "2nd & 4th End Semester Exam Schedule",
     description: "Even semester exams begin from 15th June. ",
-    imageUrl: null
+    pdfUrl: null
   },
   {
     date: "2025-05-26",
     title: "6th & 8th End Semester Exam Schedule",
     description: "Even semester exams begin from 8th June.",
-    imageUrl: null
+    pdfUrl: null
   },
 ];
 
@@ -172,6 +178,8 @@ const ZOOM_MAX  = 3.0;
 function normalizeInput(str) {
   return str.toLowerCase().trim().replace(/\s+/g, " ");
 }
+
+
 
 function buildImageCard(url, section) {
   return `
@@ -220,6 +228,9 @@ function parseInput(raw) {
       if (n.includes(alias)) { branch = val; break; }
     }
   }
+
+
+
   if (!semester) {
     const sorted = Object.entries(SEMESTER_ALIASES).sort((a, b) => b[0].length - a[0].length);
     for (const [alias, val] of sorted) {
@@ -387,15 +398,17 @@ function renderNotices() {
     const dateStr = new Date(n.date).toLocaleDateString("en-IN", {
       day: "numeric", month: "short", year: "numeric"
     });
-    const viewBtn = n.imageUrl
-      ? `<button class="notice-view-btn" onclick="openLightbox(${i})">
-           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-             <circle cx="12" cy="12" r="3"/>
-           </svg>
-           View
-         </button>`
-      : "";
+const viewBtn = n.pdfUrl
+  ? `<a class="notice-view-btn" href="${n.pdfUrl}" target="_blank" rel="noopener noreferrer">
+       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round"
+           d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4
+              M14 4h6m0 0v6m0-6L10 14"/>
+       </svg>
+       View
+     </a>`
+  : "";
+
     return `
       <div class="notice-card">
         <span class="notice-date">${dateStr}</span>
