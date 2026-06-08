@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HIT Catalog – All in one place</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="glitter"></div>
+<div class="glitter"></div>
+<div class="glitter"></div>
+<div class="glitter"></div>
+<div class="glitter"></div>
+<div class="glitter"></div>
+
+<!-- NAVIGATION -->
+<nav>
+ 
+  
+  <div class="nav-links">
+    
+    <a href="#" class="nav-link" onclick="openAboutModal(); return false;">  About</a>
+
+    <!--  Resources dropdown-->
+      
+  <div class="nav-dropdown" id="resourcesDropdown">
+    <button class="resources-btn dropdown-trigger" id="dropdownTrigger" aria-expanded="false">
+       📚Resources
+      <svg class="chevron" width="14" height="14" fill="none" stroke="currentColor"
+           stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </button>
+    <div class="dropdown-panel" id="dropdownPanel">
+      <a href="resources.html#routines" class="dropdown-item">
+        <span class="dropdown-emoji">📅</span>
+        <div>
+          <p class="dropdown-item-title">Class Routines</p>
+          <p class="dropdown-item-sub">Branch-wise weekly schedules</p>
+        </div>
+      </a>
+      <a href="resources.html#syllabus" class="dropdown-item">
+        <span class="dropdown-emoji">📖</span>
+        <div>
+          <p class="dropdown-item-title">Syllabus</p>
+          <p class="dropdown-item-sub">Semester-wise subject list</p>
+        </div>
+      </a>
+      <a href="resources.html#notices" class="dropdown-item">
+        <span class="dropdown-emoji">📢</span>
+        <div>
+          <p class="dropdown-item-title">Notices</p>
+          <p class="dropdown-item-sub">Exam dates &amp; circulars</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!--ABOUT SECTION-->
+
+<!-- OVERLAY -->
+<div class="about-overlay" id="aboutModal">
+ 
+  <!-- MODAL CARD -->
+  <div class="about-modal">
+ 
+    <!-- HEADER -->
+    <div class="about-header">
+      <div class="about-header-left">
+        <div class="about-logo-icon">
+          <svg width="18" height="18" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+          </svg>
+        </div>
+        <div>
+          <p class="about-title">About CAZZPrep</p>
+          <p class="about-subtitle-tag">Built by students, for students</p>
+        </div>
+      </div>
+      <button class="about-close-btn" id="aboutCloseBtn">&times;</button>
+    </div>
+ 
+    <!-- BODY -->
+    <div class="about-body">
+ 
+      <!-- Intro block -->
+      <div class="about-intro-block">
+        <p>
+          CAZZPrep is a <span class="about-highlight">student-driven platform</span> designed to simplify access to Previous Year Question Papers and academic exam resources in one organized space.
+        </p>
+      </div>
+ 
+      <!-- Two stat cards -->
+      <div class="about-stat-grid">
+        <div class="about-stat-card">
+          <svg width="20" height="20" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <div>
+            <p class="stat-label">Coverage</p>
+            <p class="stat-value">Class Routines, Syllabus &amp; branch-wise PYQs</p>
+          </div>
+        </div>
+        <div class="about-stat-card">
+          <svg width="20" height="20" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <div>
+            <p class="stat-label">Purpose</p>
+            <p class="stat-value">Cazz the SEM</p>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Goal -->
+      <div class="about-section">
+        <p class="about-section-label">Our goal</p>
+        <p class="about-section-text">
+          Reduce the time students spend searching for PYQs across random groups, PDFs and chats — and instead provide a clean, fast and structured academic archive that keeps growing with new subjects, updated papers and smarter features.
+        </p>
+      </div>
+ 
+      <!-- What it is -->
+      <div class="about-section">
+        <p class="about-section-label">📢 Notice something missing or incorrect?</p>
+        <p class="about-section-text">
+          Help us improve CAZZPrep by reporting missing resources, outdated information, or errors through the Google Form below. Your contribution helps fellow students.
+        </p>
+      </div>
+ 
+      <!-- Features -->
+      <div class="about-section">
+        <p class="about-section-label">Features being built</p>
+        <div class="about-chips">
+          <span class="about-chip">Smart filtering</span>
+          <span class="about-chip">Voice search</span>
+          <span class="about-chip">Faculty suggestions</span>
+          <span class="about-chip">Resource organization</span>
+          <span class="about-chip">Paper contributions</span>
+          <span class="about-chip">Exam preparation tools</span>
+        </div>
+      </div>
+ 
+      <!-- Footer -->
+      <div class="about-footer">
+        <div class="about-footer-left">
+          <svg width="14" height="14" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+          </svg>
+          <span>Made for Hitians❤️</span>
+        </div>
+        <div class="about-footer-right">
+          <a href="mailto:pyqkatalog.hit@gmail.com?subject=CAZZPrep%20Query" class="about-footer-btn about-mail-btn">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            Contact
+          </a>
+          <a href="https://forms.gle/3c3HexQ6yee4Grmq5" class="about-footer-btn about-mail-btn">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            G-form
+          </a>
+          
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- LANDING SECTION -->
+<section class="landing-section" id="landing">
+  <!-- Animated particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Book illustration -->
+  <div class="book-container">
+    <div class="book-glow"></div>
+    <svg class="book-icon" viewBox="0 0 280 200" fill="none">
+      <defs>
+        <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#ff8c5a;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#ff6b35;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <path d="M 140 40 Q 100 50, 60 40 L 60 160 Q 100 170, 140 160 Z" fill="url(#bookGradient)" opacity="0.9"/>
+      <path d="M 140 40 Q 180 50, 220 40 L 220 160 Q 180 170, 140 160 Z" fill="url(#bookGradient)" opacity="0.95"/>
+      <rect x="138" y="40" width="4" height="120" fill="#d64a1f"/>
+      <line x1="80" y1="70" x2="120" y2="70" stroke="#fff" stroke-width="1" opacity="0.3"/>
+      <line x1="80" y1="85" x2="120" y2="85" stroke="#fff" stroke-width="1" opacity="0.3"/>
+      <line x1="80" y1="100" x2="120" y2="100" stroke="#fff" stroke-width="1" opacity="0.3"/>
+      <line x1="80" y1="115" x2="120" y2="115" stroke="#fff" stroke-width="1" opacity="0.3"/>
+      <line x1="80" y1="130" x2="120" y2="130" stroke="#fff" stroke-width="1" opacity="0.3"/>
+      <line x1="160" y1="70" x2="200" y2="70" stroke="#fff" stroke-width="1" opacity="0.3"/>
+      <line x1="160" y1="85" x2="200" y2="85" stroke="#fff" stroke-width="1" opacity="0.3"/>
+      <line x1="160" y1="100" x2="200" y2="100" stroke="#fff" stroke-width="1" opacity="0.3"/>
+      <line x1="160" y1="115" x2="200" y2="115" stroke="#fff" stroke-width="1" opacity="0.3"/>
+      <line x1="160" y1="130" x2="200" y2="130" stroke="#fff" stroke-width="1" opacity="0.3"/>
+    </svg>
+  </div>
+
+  <!-- Hero content -->
+  <div class="hero-content">
+    <div class="hero-badge-logo">
+  <svg class="cazz-logo-svg" viewBox="0 0 300 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Outer brackets -->
+    <polyline points="18,15 6,35 18,55" stroke="#f97316" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="282,15 294,35 282,55" stroke="#f97316" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Inner brackets (subtle) -->
+    <polyline points="26,22 18,35 26,48" stroke="rgba(249,115,22,0.3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="274,22 282,35 274,48" stroke="rgba(249,115,22,0.3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Text -->
+    <text x="150" y="49" font-family="Inter,sans-serif" font-weight="800" font-size="44" fill="#ffffff" text-anchor="middle" letter-spacing="1">CAZZ<tspan fill="#f97316">Prep</tspan></text>
+  </svg>
+</div>
+    
+    <h1 class="hero-title">
+      Seamless <span class="highlight"> access</span>
+      to PYQs and other resources.
+    </h1>
+
+    <p class="hero-subtitle">
+      PYQs, Syllabus, Routines & Notices — All in One Place.
+    </p>
+
+    
+
+   <div class="hero-btns">
+  <button class="study-btn" onclick="scrollToHome()">
+    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+    </svg>
+    PYQs
+    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+    </svg>
+  </button>
+
+  <a href="resources.html" class="resources-cta-btn">
+    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+    </svg>
+    Resources
+    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+    </svg>
+  </a>
+</div>
+
+    
+  </div>
+</section>
+
+<!-- =========================================
+     HOW IT WORKS SECTION
+========================================= -->
+
+<!-- INFO ROW: Why Use PYQs + How It Works -->
+<div class="info-row">
+
+  <!-- Why Use PYQs -->
+  <div class="info-card">
+    <div class="info-card-header">
+      <div class="info-card-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <h3>Why Use PYQs?</h3>
+    </div>
+    <div class="info-benefits">
+      <div class="info-benefit-item">
+        <div class="info-benefit-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="info-benefit-title">Better Preparation</p>
+          <p class="info-benefit-desc">Understand important topics and patterns.</p>
+        </div>
+      </div>
+      <div class="info-benefit-item">
+        <div class="info-benefit-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="info-benefit-title">Time Saving</p>
+          <p class="info-benefit-desc">Focus on what matters most.</p>
+        </div>
+      </div>
+      <div class="info-benefit-item">
+        <div class="info-benefit-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="info-benefit-title">Exam Confidence</p>
+          <p class="info-benefit-desc">Practice real questions, boost confidence.</p>
+        </div>
+      </div>
+      <div class="info-benefit-item">
+        <div class="info-benefit-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="info-benefit-title">Community Driven</p>
+          <p class="info-benefit-desc">Together we build a better resource.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How It Works -->
+  <div class="info-card">
+    <div class="info-card-header">
+      <div class="info-card-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
+      <h3>How it works</h3>
+    </div>
+    <div class="info-steps">
+      <div class="info-step">
+        <span class="step-num">1.</span>
+        <span>Select your school from the available options</span>
+      </div>
+      <div class="info-step">
+        <span class="step-num">2.</span>
+        <span>Choose your branch and semester</span>
+      </div>
+      <div class="info-step">
+        <span class="step-num">3.</span>
+        <span>Pick a subject to view available question papers</span>
+      </div>
+      <div class="info-step">
+        <span class="step-num">4.</span>
+        <span>Access past papers organized by year wise</span>
+      </div>
+      <div class="info-step">
+        <span class="step-num">#</span>
+        <span>For now, Even Semester papers are prioritized keeping the upcoming exam in mind </span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- HOME SECTION (Filter Section) -->
+<section class="home-section" id="home">
+  <div class="home-container">
+
+
+    <!--=================== VOICE SEARCH SECTION =====================-->
+
+
+    <div class="voice-badge">✦ Just speakup and get ur papers</div>
+ 
+  <!-- Main voice card -->
+  <div class="voice-card">
+ 
+    <!-- Top label -->
+    <div class="voice-label">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24" style="flex-shrink:0">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+        <line x1="12" y1="19" x2="12" y2="23"/>
+        <line x1="8" y1="23" x2="16" y2="23"/>
+      </svg>
+      Speak your branch &amp; semester  in any order
+    </div>
+ 
+    <!-- Voice search bar -->
+    <div class="voice-bar" id="voiceBar">
+ 
+      <!-- Mic button -->
+      <button class="mic-btn" id="micBtn" onclick="startVoiceSearch()" title="Click to speak">
+        <!-- Mic icon (idle) -->
+        <svg class="mic-icon" id="micIcon" width="22" height="22" fill="none"
+             stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+        <!-- Waveform bars (visible while listening) -->
+        <span class="wave-bars" id="waveBars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </span>
+      </button>
+ 
+      <!-- Transcript display -->
+      <div class="voice-transcript" id="voiceTranscript">
+        <span class="placeholder-text" id="placeholderText">
+          Click the mic and say something like <em>"CSE semester 2 "</em>
+        </span>
+        <span class="live-text" id="liveText"></span>
+      </div>
+ 
+      <!-- Clear button -->
+      <button class="clear-btn" id="clearBtn" onclick="clearVoice()" title="Clear" style="display:none">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+             viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+ 
+    <!-- Status message -->
+    <div class="voice-status" id="voiceStatus"></div>
+ 
+    <!-- Example chips -->
+    <div class="example-chips">
+      <span class="chip-label">Try saying:</span>
+      <button class="chip" onclick="simulateVoice('CSEDS semester 4 ')">Data Science semester 4 </button>
+      <button class="chip" onclick="simulateVoice('semester 4  AIML')">semester 4  AIML</button>
+
+    </div>
+
+    <div class="voice-warning"
+     id="voiceWarning">
+
+  ⚠ Voice search may miss some subjects.
+  Try the dropdown filters for better accuracy.
+
+</div>
+  </div>
+    
+    <!-- Find Your PYQs -->
+    <div class="find-section">
+      <div class="section-header">
+        <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        <div>
+          <h2 class="section-title">Find Your PYQs</h2>
+        </div>
+      </div>
+      <p class="section-subtitle">Select your course details to find the papers you need.</p>
+
+      <div class="filter-grid">
+        <!-- School -->
+        <div class="select-wrapper">
+          <div class="select-label">
+            <svg class="select-label-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+            Select School
+          </div>
+          <select id="school">
+            <option value="">Select School</option>
+            <option>School of Computer Science Engineering</option>
+            <option>School of Non Computer Science Engineering</option>
+          </select><div id="schoolWarning" class="school-warning" style="display:none;">
+  ⚠ Currently, SEM 4 papers are available for ME,ECE,Chemical & BT branches only. Other branches - SEM 1 & 2 papers are available.
+</div>
+        </div>
+
+        <!-- Branch -->
+        <div class="select-wrapper">
+          <div class="select-label">
+            <svg class="select-label-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+            </svg>
+            Select Branch
+          </div>
+          <select id="branch">
+            <option value="">Select Branch</option>
+          </select>
+        
+          <div class="cse-notice" id="cseNotice">
+            ⚠ There is a change in the syllabus recently.
+            More papers will be added progressively.
+            </div>
+          </div>
+
+        <!-- Semester -->
+        <div class="select-wrapper">
+          <div class="select-label">
+            <svg class="select-label-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            Select Semester
+          </div>
+          <select id="semester">
+            <option value="">Select Semester</option>
+            <option>Semester 1</option>
+            <option>Semester 2</option>
+            <option>Semester 3</option>
+            <option>Semester 4</option>
+            <option>Semester 5</option>
+            <option>Semester 6</option>
+            <option>Semester 7</option>
+            <option>Semester 8</option>
+          </select>
+        </div>
+
+        <!-- Subject -->
+        <div class="select-wrapper">
+          <div class="select-label">
+            <svg class="select-label-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+            Select Subject
+          </div>
+          <select id="subject">
+            <option value="">Select Subject</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="find-btn" onclick="findPapers()">
+        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        Find PYQs
+      </button>
+    </div>
+
+    
+
+    <!-- Results Section -->
+    <div class="results-section" id="results">
+      <div class="results-header">
+        <h3 class="results-title" id="resultsTitle"></h3>
+      </div>
+      <div class="paper-grid" id="paperGrid"></div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- PDF PREVIEW MODAL -->
+<div class="pdf-modal" id="pdfModal">
+  <div class="pdf-container">
+    <div class="pdf-header">
+      <div class="pdf-title" id="pdfTitle">PDF Preview</div>
+      <button class="btn-close" onclick="closePdfModal()">&times;</button>
+    </div>
+    <iframe class="pdf-viewer" id="pdfViewer"></iframe>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  Made with <span class="heart">❤️</span> for <a href="#">Hitians</a>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
+
