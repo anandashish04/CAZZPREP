@@ -1051,26 +1051,7 @@ select:focus {
   color: var(--text-dim);
 }
 
-/* ══════════════════════════════════════════
-   FOOTER
-══════════════════════════════════════════ */
-footer {
-  text-align: center;
-  padding: 2rem;
-  color: var(--text-gray);
-  font-size: 0.9rem;
-  border-top: 1px solid rgba(255, 107, 53, 0.1);
-}
 
-footer .heart {
-  color: var(--orange);
-}
-
-footer a {
-  color: var(--orange);
-  text-decoration: none;
-  font-weight: 600;
-}
 
 /* =========================================
    SIDE ORANGE GLOW EFFECT
@@ -2340,4 +2321,104 @@ FOR ANDROID USERS
   font-size: 0.92rem;
 
   line-height: 1.6;
+}
+
+/* =========================================
+   CONTRIBUTION FOOTER
+========================================= */
+
+.contribution-footer {
+
+  margin-top: 15rem;
+
+  padding: 2rem;
+
+ 
+  background: rgba(162, 159, 158, 0.08);
+
+  border-top: 1px solid rgba(249,115,22,0.15);
+
+}
+
+.contribution-content {
+
+  max-width: 700px;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.contribution-title {
+
+  color: #f97316;
+
+  font-size: 1.1rem;
+
+  font-weight: 600;
+
+  margin-bottom: 0.8rem;
+}
+
+.contribution-text {
+
+  color: rgba(255,255,255,0.75);
+
+  font-size: 0.95rem;
+
+  line-height: 1.8;
+
+  margin-bottom: 1.25rem;
+}
+
+.contribution-btn {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 12px 18px;
+
+  border-radius: 12px;
+
+  background: rgba(131, 128, 126, 0.08);
+
+  border: 1px solid rgba(249,115,22,0.25);
+
+  color: #fb923c;
+
+  text-decoration: none;
+
+  transition: 0.3s ease;
+}
+
+.contribution-btn:hover {
+
+  background: rgba(249,115,22,0.15);
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 0 20px rgba(249,115,22,0.15);
+}
+
+footer {
+  text-align: center;
+  margin-top: 0.9rem;
+  
+  color: var(--text-gray);
+  font-size: 0.9rem;
+  
+}
+
+footer .heart {
+  color: var(--orange);
+}
+
+footer a {
+  color: var(--orange);
+  text-decoration: none;
+  font-weight: 600;
+   background: rgba(162, 159, 158, 0.08);
 }
